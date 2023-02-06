@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flelden_ring/themes/asset_paths.dart';
+import 'package:flelden_ring/utilities/asset_paths.dart';
 import 'package:flelden_ring/themes/colors.dart';
 import 'package:flutter/material.dart';
 

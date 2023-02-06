@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flelden_ring/screens/main_menu_screen.dart';
-import 'package:flelden_ring/themes/asset_paths.dart';
+import 'package:flelden_ring/utilities/asset_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

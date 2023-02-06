@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 
 class AnimatedOption extends StatefulWidget {
   final String text;
-  const AnimatedOption(this.text, {super.key});
+  final bool active;
+  const AnimatedOption(this.text, this.active, {super.key});
 
   @override
   State<AnimatedOption> createState() => _AnimatedOptionState();
 }
 
 class _AnimatedOptionState extends State<AnimatedOption> {
-  bool visible = false;
+  bool visible = true;
   final Duration _fadeDuration = const Duration(seconds: 1);
   late Timer _timer;
 
@@ -41,15 +42,19 @@ class _AnimatedOptionState extends State<AnimatedOption> {
       child: Stack(
         children: [
           AnimatedOpacity(
-            opacity: visible ? .6 : .2,
+            opacity: widget.active && visible ? .6 : .2,
             duration: _fadeDuration,
             child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(color: kCLight, width: 2),
-                color: kCGoldDark,
-              ),
+              decoration: widget.active
+                  ? BoxDecoration(
+                      border: Border.all(color: kCLight, width: 2),
+                      borderRadius:
+                          const BorderRadius.all(Radius.elliptical(100, 100)),
+                      color: kCGoldDark,
+                    )
+                  : null,
             ),
           ),
           Center(

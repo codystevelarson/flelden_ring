@@ -15,6 +15,7 @@ dependencies:
   go_router: ^6.0.3
   url_strategy: ^0.2.0
   auto_size_text: ^3.0.0
+  audioplayers: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +35,7 @@ flutter:
     - assets/images/
     - assets/images/splash/
     - assets/images/icons/
+    - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

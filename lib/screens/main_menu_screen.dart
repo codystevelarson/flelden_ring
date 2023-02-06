@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flelden_ring/components/buttons/animated_option.dart';
 import 'package:flelden_ring/components/loading/loading_indicator.dart';
-import 'package:flelden_ring/themes/asset_paths.dart';
-import 'package:flelden_ring/themes/text_styles.dart';
+import 'package:flelden_ring/utilities/asset_paths.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class MainMenu extends StatefulWidget {
@@ -21,6 +22,7 @@ class _MainMenuState extends State<MainMenu> {
   bool started = false;
   bool loading = true;
   String networkMessage = 'in progress work';
+  final audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -30,6 +32,12 @@ class _MainMenuState extends State<MainMenu> {
         fadingIn = true;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
   }
 
   @override
@@ -104,7 +112,7 @@ class _MainMenuState extends State<MainMenu> {
                                 height: 50,
                               ),
                               !started
-                                  ? AnimatedOption('press any key')
+                                  ? AnimatedOption('press any key', true)
                                   : TitleMenu(),
                             ],
                           ),
@@ -138,9 +146,18 @@ class _MainMenuState extends State<MainMenu> {
   }
 
   void tap() {
-    setState(() {
-      started = !started;
-    });
+    if (!started) {
+      playBackgroundMusic();
+      setState(() {
+        started = true;
+      });
+    }
+  }
+
+  void playBackgroundMusic() async {
+    await audioPlayer.setVolume(.2);
+    await audioPlayer.setSourceAsset(AudioPaths.mainTheme);
+    await audioPlayer.resume();
   }
 }
 
@@ -154,11 +171,46 @@ class TitleMenu extends StatefulWidget {
 }
 
 class _TitleMenuState extends State<TitleMenu> {
+  List<String> items = [
+    'new game',
+    'load game',
+    'settings',
+  ];
+
+  int activeIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         shrinkWrap: true,
-        itemCount: 5,
-        itemBuilder: ((context, index) => Center(child: Text('Menu options'))));
+        itemCount: items.length,
+        itemBuilder: ((context, index) => GestureDetector(
+              onTap: () => setActive(index),
+              child: Listener(
+                behavior: HitTestBehavior.opaque,
+                onPointerSignal: handleScroll,
+                child: Center(
+                    child: AnimatedOption(items[index], index == activeIndex)),
+              ),
+            )));
+  }
+
+  void setActive(int index) {
+    if (index < 0) index = 0;
+
+    if (index > items.length - 1) {
+      index = items.length - 1;
+    }
+
+    setState(() {
+      activeIndex = index;
+    });
+  }
+
+  void handleScroll(PointerSignalEvent signal) {
+    if (signal is PointerScrollEvent) {
+      int index = signal.scrollDelta.dy > 0 ? 1 : -1;
+      setActive(activeIndex + index);
+    }
   }
 }
